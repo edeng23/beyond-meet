@@ -217,15 +217,18 @@ class EmailProcessor:
         """
         participants = set()
         for part in mime_msg.walk():
-            if part.get("Content-Type", "").startswith("multipart"):
-                continue
-            payload = part.get_payload(decode=True)
-            if payload:
-                found_emails = EMAIL_REGEX.findall(str(payload))
-                for email in found_emails:
-                    cleaned_email = email.lower()
-                    if cleaned_email not in IGNORED_EMAILS:
-                        participants.add(cleaned_email)
+            try:
+                if part.get("Content-Type", "").startswith("multipart"):
+                    continue
+                payload = part.get_payload(decode=True)
+                if payload:
+                    found_emails = EMAIL_REGEX.findall(str(payload))
+                    for email in found_emails:
+                        cleaned_email = email.lower()
+                        if cleaned_email not in IGNORED_EMAILS:
+                            participants.add(cleaned_email)
+            except Exception as e:
+                logging.error(f"Error extracting email addresses: {e}")
         return participants
 
 
