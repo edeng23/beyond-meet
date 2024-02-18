@@ -7,4 +7,4 @@ After enabling the Gmail API, go to the "Credentials" tab. Here, you'll need to 
 Upon successful creation, you'll have the option to download a JSON file. This file is crucial as it houses your client configuration details. Save it at the root of the directory.
 
 ## Run
-Make all
+```make all```
