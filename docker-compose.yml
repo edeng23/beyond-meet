@@ -1,0 +1,27 @@
+version: '3'
+services:
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/Aa123456
+    ports:
+      - "7474:7474" # HTTP
+      - "7687:7687" # Bolt
+    volumes:
+      - $PWD/neo4j/data:/data
+      - $PWD/neo4j/logs:/logs
+      - $PWD/neo4j/import:/var/lib/neo4j/import
+      - $PWD/neo4j/plugins:/plugins
+
+  app:
+    build: .
+    container_name: python_app
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=Aa123456
+    volumes:
+      - $PWD:/usr/src/app
+    depends_on:
+      - neo4j
