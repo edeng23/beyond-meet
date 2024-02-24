@@ -222,6 +222,10 @@ class EmailProcessor:
                     continue
                 payload = part.get_payload(decode=True)
                 if payload:
+                    # Preprocess payload to remove \r\n characters
+                    payload = (
+                        payload.decode("utf-8").replace("\r\n", " ").replace("\n", " ")
+                    )
                     found_emails = EMAIL_REGEX.findall(str(payload))
                     for email in found_emails:
                         cleaned_email = email.lower()
