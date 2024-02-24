@@ -6,7 +6,7 @@ Visualize your social connection graph.
 
 Before you begin, ensure you have met the following requirements:
 - You have a **Google Cloud Platform** account.
-- You have installed **[Git](https://git-scm.com/downloads)** and **[Make](https://www.gnu.org/software/make/)** on your machine.
+- You have installed **[Docker](https://www.docker.com/products/docker-desktop)**, **[Python](https://www.python.org/downloads/)** and **[Make](https://www.gnu.org/software/make/)** on your machine.
 
 ## Setup
 
@@ -30,3 +30,16 @@ To run this project, open your terminal and navigate to the project directory. T
 
 ```bash
 make all
+```
+
+## Viewing the Network Graph
+After the application has finished running, you can connect to the Neo4j server your Neo4j viewer of choice.
+
+Use the following credentials:
+```
+    URI: bolt://neo4j:7687
+    User: neo4j
+    Password: Aa123456
+```
+
+Use Cypher queries to explore your social connection graph. For example, you can start with a simple query like MATCH (n) RETURN n to view all nodes in the graph.
