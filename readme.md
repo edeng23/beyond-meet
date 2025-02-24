@@ -1,56 +1,158 @@
 # Beyond Meet
 
-Visualize your social connection graph.
+A tool that visualizes your professional network by analyzing your calendar meetings and email interactions.
 
-## Prerequisites
+## Features
 
-Before you begin, ensure you have met the following requirements:
-- You have a **Google Cloud Platform** account.
-- You have installed **[Docker](https://www.docker.com/products/docker-desktop)**, **[Python](https://www.python.org/downloads/)** and **[Make](https://www.gnu.org/software/make/)** on your machine.
+- Interactive network visualization with real-time progress tracking
+- Search and filter connections
+- View meeting history with connections
+- Edit and store contact information
+- Secure Google OAuth2 authentication
+- Persistent graph storage between sessions
+
+## Tech Stack
+
+### Backend
+- FastAPI
+- PostgreSQL
+- Redis
+- Google Gmail API
+- Server-Sent Events (SSE) for real-time progress updates
+
+### Frontend
+- Next.js 13
+- React
+- TypeScript
+- Tailwind CSS
+- Force Graph for network visualization
+- EventSource API for real-time updates
 
 ## Setup
 
-### Setting Up Your Google Cloud Project and Activating the Gmail API
+### Prerequisites
+- Docker and Docker Compose (recommended for easy setup)
+- Python 3.11+ (if running without Docker)
+- Node.js 18+ (if running without Docker)
+- PostgreSQL
+- Redis
+- Google Cloud Platform account with Gmail API enabled
 
-1. **Navigate to the Google Developers Console**: Open your web browser and go to the [Google Developers Console](https://console.developers.google.com/). This will be your starting point for creating a new project.
+### Google API Setup
 
-2. **Create a New Project**: Click on the "Create Project" button. You'll be prompted to enter a project name and select a billing account. Fill in the required details to proceed.
+1. Create a project in the [Google Cloud Console](https://console.cloud.google.com/)
+2. Enable the Gmail API
+3. Configure the OAuth consent screen
+4. Create OAuth 2.0 credentials (Web application type)
+5. Add authorized redirect URIs:
+   - `http://localhost:8000/api/auth_callback`
+   - `http://localhost:3000`
 
-3. **Enable the Gmail API**: After your project is created, navigate to the "Library" section within the console. Use the search bar to find the "Gmail API". Click on it and then click the "Enable" button to activate the API for your project.
+### Environment Variables
 
-4. **Configure OAuth Consent Screen**: Go to the "OAuth consent screen" tab in the "Credentials" section. Fill in the required fields such as the application name, user support email, and developer contact information. Save and continue.
-
-5. **Create OAuth 2.0 Credentials**: In the "Credentials" tab, click on "Create Credentials" and select "OAuth 2.0 Client IDs". Follow the on-screen instructions to configure the OAuth consent screen and create your credentials.
-
-6. **Download the Configuration File**: After creating your OAuth 2.0 Client ID, you'll see an option to download your credentials as a JSON file. Download this file and save it in the root directory of your project. This file contains important client configuration details.
-
-## Running the Project
-
-1. First, authenticate with Google (this needs to be done only once or when the token expires):
-```bash
-make auth
+1. Create a root `.env` file:
 ```
-This will open a browser window for you to authenticate with Google.
+GOOGLE_CLIENT_ID=your_client_id_here
+GOOGLE_CLIENT_SECRET=your_client_secret_here
+```
 
-2. After authentication is complete, build and run the application:
+2. Create a frontend `.env.local` file:
+```
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_client_id_here
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+### Running with Docker (Recommended)
+
+The easiest way to run the application is using Docker Compose:
+
 ```bash
+# Build and start all services
+make dev
+
+# Or step by step:
 make build
 make run
 ```
 
-Or you can do everything in one command:
+This will start:
+- PostgreSQL database
+- Redis cache
+- FastAPI backend on http://localhost:8000
+- Next.js frontend on http://localhost:3000
+
+### Manual Installation
+
+1. Clone the repository
+
+2. Backend setup:
 ```bash
-make all
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-## Viewing the Network Graph
-After the application has finished running, you can connect to the Neo4j server your Neo4j viewer of choice.
-
-Use the following credentials:
-```
-    URI: bolt://neo4j:7687
-    User: neo4j
-    Password: Aa123456
+3. Frontend setup:
+```bash
+cd frontend
+npm install --legacy-peer-deps
 ```
 
-Use Cypher queries to explore your social connection graph. For example, you can start with a simple query like MATCH (n) RETURN n to view all nodes in the graph.
+### Running Manually
+
+1. Start PostgreSQL and Redis
+
+2. Start the backend:
+```bash
+cd backend
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+3. Start the frontend:
+```bash
+cd frontend
+npm run dev
+```
+
+4. Visit http://localhost:3000 in your browser
+
+## Usage
+
+1. Sign in with your Google account
+2. The application will automatically generate your network graph on first login
+3. You'll see a progress bar indicating the graph generation status
+4. Once complete, you can:
+   - Search for contacts
+   - Click on nodes to view contact details
+   - Edit contact information
+   - Regenerate the graph as needed
+
+## Troubleshooting
+
+- **Progress bar stuck**: If the progress bar gets stuck, try refreshing the page. The application will reconnect to the progress stream.
+- **Authentication errors**: Ensure your Google API credentials are correctly set up and the redirect URIs match your environment.
+- **Empty graph**: If your graph is empty, you may not have enough email interactions in your Gmail account, or the permissions might be insufficient.
+
+## Useful Commands
+
+```bash
+# View backend logs
+make backend-logs
+
+# View frontend logs
+make frontend-logs
+
+# Access database shell
+make db-shell
+
+# Restart all services
+make restart
+
+# Clean up all containers and volumes
+make clean
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details
