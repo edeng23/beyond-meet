@@ -26,8 +26,19 @@ Before you begin, ensure you have met the following requirements:
 
 ## Running the Project
 
-To run this project, open your terminal and navigate to the project directory. Then, execute the following command:
+1. First, authenticate with Google (this needs to be done only once or when the token expires):
+```bash
+make auth
+```
+This will open a browser window for you to authenticate with Google.
 
+2. After authentication is complete, build and run the application:
+```bash
+make build
+make run
+```
+
+Or you can do everything in one command:
 ```bash
 make all
 ```
