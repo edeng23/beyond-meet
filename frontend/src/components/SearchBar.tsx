@@ -8,7 +8,7 @@ interface SearchBarProps {
 }
 
 interface Suggestion {
-    node: GraphNode; z
+    node: GraphNode;
     matchField: string;
     matchValue: string;
 }
@@ -60,7 +60,7 @@ const SearchBar: FC<SearchBarProps> = ({ nodes, onSearch, onNodeSelect }) => {
                         bestMatch = {
                             node,
                             matchField: field,
-                            matchValue: value
+                            matchValue: value,
                         };
                     }
                 }
